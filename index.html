@@ -1,103 +1,286 @@
-<!-- Create contect for a portolio (static website) for GitHub -->
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Portfolio</title>
+    <title>Giulia Puntin — Data & Biology</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      :root {
+        --bg: #0c0c0e; --surface: #14141a; --border: #222230;
+        --accent: #c8f060; --accent2: #60d0f0; --accent3: #f0a060;
+        --text: #e8e8f0; --muted: #7070a0;
+        --serif: 'DM Serif Display', Georgia, serif;
+        --mono: 'DM Mono', monospace;
+      }
+      html { scroll-behavior: smooth; }
+      body { background:var(--bg); color:var(--text); font-family:var(--mono); font-size:15px; line-height:1.7; overflow-x:hidden; }
+      body::before { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events:none; z-index:999; opacity:0.4; }
+
+      nav { position:fixed; top:0; left:0; right:0; display:flex; justify-content:space-between; align-items:center; padding:1.2rem 3rem; background:rgba(12,12,14,0.88); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); z-index:100; }
+      .nav-logo { font-family:var(--serif); font-size:1.3rem; color:var(--accent); text-decoration:none; }
+      .nav-links { display:flex; gap:2rem; list-style:none; }
+      .nav-links a { color:var(--muted); text-decoration:none; font-size:0.78rem; letter-spacing:0.1em; text-transform:uppercase; transition:color 0.2s; }
+      .nav-links a:hover { color:var(--accent); }
+
+      #hero { min-height:100vh; display:flex; flex-direction:column; justify-content:center; padding:8rem 3rem 4rem; position:relative; overflow:hidden; }
+      .hero-grid-line { position:absolute; top:0; bottom:0; border-left:1px solid var(--border); pointer-events:none; }
+      .hero-label { font-size:0.75rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--accent); margin-bottom:1.5rem; animation:fadeUp 0.8s ease both; }
+      .hero-title { font-family:var(--serif); font-size:clamp(3rem,9vw,7.5rem); line-height:1.0; letter-spacing:-0.03em; color:var(--text); animation:fadeUp 0.8s 0.1s ease both; }
+      .hero-title em { font-style:italic; color:var(--accent); }
+      .hero-sub { max-width:520px; color:var(--muted); margin-top:2rem; font-size:0.9rem; animation:fadeUp 0.8s 0.2s ease both; line-height:1.8; }
+      .hero-sub code { color:var(--accent2); background:rgba(96,208,240,0.1); padding:0.1em 0.4em; border-radius:2px; font-size:0.85em; }
+      .hero-actions { display:flex; gap:1rem; flex-wrap:wrap; margin-top:3rem; animation:fadeUp 0.8s 0.3s ease both; }
+      .btn-primary { display:inline-flex; align-items:center; gap:0.5rem; padding:0.9rem 2rem; background:var(--accent); color:#0c0c0e; font-family:var(--mono); font-size:0.78rem; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; text-decoration:none; transition:transform 0.2s, box-shadow 0.2s; }
+      .btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(200,240,96,0.25); }
+      .btn-outline { display:inline-flex; align-items:center; gap:0.5rem; padding:0.9rem 2rem; border:1px solid var(--border); color:var(--muted); font-family:var(--mono); font-size:0.78rem; letter-spacing:0.1em; text-transform:uppercase; text-decoration:none; transition:border-color 0.2s, color 0.2s; }
+      .btn-outline:hover { border-color:var(--accent2); color:var(--accent2); }
+
+      section { padding:6rem 3rem; border-top:1px solid var(--border); max-width:1100px; margin:0 auto; }
+      .section-label { font-size:0.7rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--accent); margin-bottom:0.8rem; }
+      .section-title { font-family:var(--serif); font-size:clamp(2rem,5vw,3.2rem); letter-spacing:-0.02em; color:var(--text); margin-bottom:2rem; line-height:1.1; }
+
+      .about-grid { display:grid; grid-template-columns:1.2fr 1fr; gap:4rem; align-items:start; }
+      .about-text p { color:var(--muted); margin-bottom:1rem; font-size:0.9rem; }
+      .about-text code { color:var(--accent2); background:rgba(96,208,240,0.1); padding:0.1em 0.4em; border-radius:2px; font-size:0.85em; }
+      .about-stats { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+      .stat-card { background:var(--surface); border:1px solid var(--border); padding:1.4rem; }
+      .stat-number { font-family:var(--serif); font-size:2.2rem; color:var(--accent); line-height:1; }
+      .stat-desc { font-size:0.72rem; color:var(--muted); margin-top:0.3rem; letter-spacing:0.05em; }
+
+      .skills-categories { display:flex; flex-direction:column; gap:2rem; }
+      .skill-group-title { font-size:0.7rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); margin-bottom:0.8rem; }
+      .skills-grid { display:flex; flex-wrap:wrap; gap:0.7rem; }
+      .skill-chip { display:flex; align-items:center; gap:0.6rem; padding:0.6rem 1rem; background:var(--surface); border:1px solid var(--border); transition:border-color 0.2s, transform 0.2s; cursor:default; }
+      .skill-chip:hover { border-color:var(--accent); transform:translateY(-2px); }
+      .skill-chip.blue:hover { border-color:var(--accent2); }
+      .skill-chip.orange:hover { border-color:var(--accent3); }
+      .skill-dot { width:6px; height:6px; border-radius:50%; background:var(--accent); flex-shrink:0; }
+      .skill-dot.blue { background:var(--accent2); }
+      .skill-dot.orange { background:var(--accent3); }
+      .skill-name { font-size:0.82rem; color:var(--text); }
+
+      .projects-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(310px,1fr)); gap:1.5rem; }
+      .project-card { background:var(--surface); border:1px solid var(--border); padding:2rem; position:relative; transition:border-color 0.2s, transform 0.2s; overflow:hidden; text-decoration:none; display:block; color:inherit; }
+      .project-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--accent),var(--accent2)); transform:scaleX(0); transform-origin:left; transition:transform 0.3s ease; }
+      .project-card:hover { border-color:var(--accent); transform:translateY(-3px); }
+      .project-card:hover::before { transform:scaleX(1); }
+      .project-card.type-bio::before { background:linear-gradient(90deg,var(--accent2),var(--accent3)); }
+      .project-num { font-size:0.68rem; color:var(--muted); letter-spacing:0.15em; margin-bottom:1rem; }
+      .project-icon { font-size:1.6rem; margin-bottom:0.8rem; }
+      .project-name { font-family:var(--serif); font-size:1.25rem; color:var(--text); margin-bottom:0.7rem; }
+      .project-desc { font-size:0.82rem; color:var(--muted); line-height:1.65; }
+      .project-tags { display:flex; flex-wrap:wrap; gap:0.4rem; margin-top:1.4rem; }
+      .tag { font-size:0.65rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent2); border:1px solid rgba(96,208,240,0.3); padding:0.2rem 0.55rem; }
+      .tag.green { color:var(--accent); border-color:rgba(200,240,96,0.3); }
+      .tag.orange { color:var(--accent3); border-color:rgba(240,160,96,0.3); }
+
+      .plans-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:1rem; }
+      .plan-card { background:var(--surface); border:1px solid var(--border); padding:1.5rem; transition:border-color 0.2s; }
+      .plan-card:hover { border-color:var(--accent2); }
+      .plan-icon { font-size:1.4rem; margin-bottom:0.8rem; }
+      .plan-title { font-size:0.85rem; color:var(--text); margin-bottom:0.4rem; }
+      .plan-title code { color:var(--accent2); background:rgba(96,208,240,0.1); padding:0.1em 0.3em; }
+      .plan-desc { font-size:0.78rem; color:var(--muted); }
+
+      .contact-box { background:var(--surface); border:1px solid var(--border); padding:3rem; }
+      .contact-heading { font-family:var(--serif); font-size:clamp(1.8rem,3.5vw,2.8rem); color:var(--text); margin-bottom:0.8rem; }
+      .contact-sub { color:var(--muted); font-size:0.88rem; margin-bottom:2rem; max-width:500px; }
+      .contact-links { display:flex; gap:1rem; flex-wrap:wrap; align-items:center; }
+      .contact-link { display:inline-flex; align-items:center; gap:0.5rem; padding:0.8rem 1.6rem; border:1px solid var(--accent); color:var(--accent); font-family:var(--mono); font-size:0.78rem; letter-spacing:0.1em; text-transform:uppercase; text-decoration:none; transition:background 0.2s, color 0.2s; }
+      .contact-link:hover { background:var(--accent); color:#0c0c0e; }
+      .contact-link.li { border-color:var(--accent2); color:var(--accent2); }
+      .contact-link.li:hover { background:var(--accent2); color:#0c0c0e; }
+      .coffee-wrap { margin-top:2rem; padding-top:2rem; border-top:1px solid var(--border); }
+      .coffee-label { font-size:0.72rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); margin-bottom:0.8rem; }
+
+      footer { border-top:1px solid var(--border); padding:2rem 3rem; display:flex; justify-content:space-between; align-items:center; font-size:0.72rem; color:var(--muted); max-width:1100px; margin:0 auto; }
+
+      @keyframes fadeUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
+
+      @media (max-width:700px) {
+        nav { padding:1rem 1.5rem; }
+        .nav-links { display:none; }
+        #hero, section { padding-left:1.5rem; padding-right:1.5rem; }
+        .about-grid { grid-template-columns:1fr; gap:2rem; }
+        footer { flex-direction:column; gap:0.5rem; text-align:center; }
+      }
+    </style>
   </head>
   <body>
-    <h1>Welcome to My Portfolio</h1>
-    <p>This is a static website showcasing my projects and skills.</p>
-    <h2>Projects</h2>
-    <ul>
-      <li><a href="project1.html">Project 1: Personal Blog</a></li>
-      <li><a href="project2.html">Project 2: Portfolio Website</a></li>
-      <li><a href="project3.html">Project 3: E-commerce Platform</a></li>
-    </ul>
 
-    <!-- Now add some more different content sections here (like About Me, Skills, Contact) -->
-    <h2>About Me</h2>
-    <p>
-      I am a passionate web developer with experience in creating dynamic and
-      responsive websites.
-    </p>
+    <nav>
+      <a href="#hero" class="nav-logo">Giulia<em style="font-style:italic;color:var(--accent)">.</em></a>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#future">Future</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
 
-    <h2>Skills</h2>
-    <ul>
-      <li>HTML</li>
-      <li>CSS</li>
-      <li>JavaScript</li>
-      <li>React</li>
-    </ul>
+    <div id="hero">
+      <div class="hero-grid-line" style="left:33.3%"></div>
+      <div class="hero-grid-line" style="left:66.6%"></div>
+      <p class="hero-label">Quantitative Biologist &nbsp;·&nbsp; Data Scientist &nbsp;·&nbsp; R Enthusiast 🌊</p>
+      <h1 class="hero-title">Hi, I'm<br><em>Giulia</em> 👋</h1>
+      <p class="hero-sub">I fell in love with <code>R</code> while doing scientific research — and never looked back. I turn complex biological data into clear, beautiful insights. Passionate about data analysis, visualization, and using data to drive real-world change.</p>
+      <div class="hero-actions">
+        <a href="#projects" class="btn-primary">Explore my work &rarr;</a>
+        <a href="https://scholar.google.co.nz/citations?user=827VF-YAAAAJ&hl=en" target="_blank" class="btn-outline">Google Scholar 📚</a>
+      </div>
+    </div>
 
-    <!-- Add a bar chart to my page using D3.js, loaded from a CDN -->
-    <!-- use this data: -->
-    <!-- const data = [
-  { name: "A", value: 1 },
-  { name: "B", value: 5 },
-  { name: "C", value: 8 },
-  { name: "D", value: 10 }
-]; -->
-    <h2>Bar Chart</h2>
-    <div id="bar-chart"></div>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script>
-      const data = [
-        { name: "A", value: 1 },
-        { name: "B", value: 5 },
-        { name: "C", value: 8 },
-        { name: "D", value: 10 },
-      ];
+    <section id="about">
+      <p class="section-label">01 &mdash; About</p>
+      <h2 class="section-title">Who I am</h2>
+      <div class="about-grid">
+        <div class="about-text">
+          <p>I'm a quantitative biologist by training who discovered a deep love for <code>R</code> coding through scientific research. My journey has been predominantly self-taught — I developed my skills by working on real datasets and analytical challenges in academic research.</p>
+          <p>My work spans marine biology, microbiome research, and coral physiology. I've published research on coral symbiosis, built reproducible analysis pipelines, and contributed to the scientific community with open, transparent code.</p>
+          <p>Beyond research, I love sharing knowledge — I've created and run R workshops on data wrangling and reproducible research, and I'm always excited about new collaborations that make a difference.</p>
+        </div>
+        <div class="about-stats">
+          <div class="stat-card"><div class="stat-number">R</div><div class="stat-desc">Primary language</div></div>
+          <div class="stat-card"><div class="stat-number">3+</div><div class="stat-desc">Published papers</div></div>
+          <div class="stat-card"><div class="stat-number">2</div><div class="stat-desc">R workshops run</div></div>
+          <div class="stat-card"><div class="stat-number">🪸</div><div class="stat-desc">Coral & microbiome research</div></div>
+        </div>
+      </div>
+    </section>
 
-      const width = 500;
-      const height = 300;
-      const margin = { top: 20, right: 30, bottom: 40, left: 40 };
+    <section id="skills">
+      <p class="section-label">02 &mdash; Skills</p>
+      <h2 class="section-title">What I work with</h2>
+      <div class="skills-categories">
+        <div>
+          <p class="skill-group-title">Coding & Data</p>
+          <div class="skills-grid">
+            <div class="skill-chip"><span class="skill-dot"></span><span class="skill-name">R</span></div>
+            <div class="skill-chip"><span class="skill-dot"></span><span class="skill-name">R Tidyverse</span></div>
+            <div class="skill-chip"><span class="skill-dot"></span><span class="skill-name">ggplot2</span></div>
+            <div class="skill-chip"><span class="skill-dot"></span><span class="skill-name">R Shiny</span></div>
+            <div class="skill-chip"><span class="skill-dot"></span><span class="skill-name">Data Visualization</span></div>
+            <div class="skill-chip"><span class="skill-dot"></span><span class="skill-name">EDA</span></div>
+          </div>
+        </div>
+        <div>
+          <p class="skill-group-title">Science & Biology</p>
+          <div class="skills-grid">
+            <div class="skill-chip blue"><span class="skill-dot blue"></span><span class="skill-name">Bioinformatics</span></div>
+            <div class="skill-chip blue"><span class="skill-dot blue"></span><span class="skill-name">Microbiome Analysis</span></div>
+            <div class="skill-chip blue"><span class="skill-dot blue"></span><span class="skill-name">Marine Biology</span></div>
+            <div class="skill-chip blue"><span class="skill-dot blue"></span><span class="skill-name">Coral Physiology</span></div>
+            <div class="skill-chip blue"><span class="skill-dot blue"></span><span class="skill-name">Seawater Chemistry</span></div>
+          </div>
+        </div>
+        <div>
+          <p class="skill-group-title">Communication</p>
+          <div class="skills-grid">
+            <div class="skill-chip orange"><span class="skill-dot orange"></span><span class="skill-name">Scientific Writing</span></div>
+            <div class="skill-chip orange"><span class="skill-dot orange"></span><span class="skill-name">Workshop Facilitation</span></div>
+            <div class="skill-chip orange"><span class="skill-dot orange"></span><span class="skill-name">Data Storytelling</span></div>
+            <div class="skill-chip orange"><span class="skill-dot orange"></span><span class="skill-name">Reproducible Research</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-      const svg = d3
-        .select("#bar-chart")
-        .append("svg")
-        .attr("width", width)
-        .attr("height", height);
+    <section id="projects">
+      <p class="section-label">03 &mdash; Projects</p>
+      <h2 class="section-title">Things I've built</h2>
+      <div class="projects-grid">
 
-      const x = d3
-        .scaleBand()
-        .domain(data.map((d) => d.name))
-        .range([margin.left, width - margin.right])
-        .padding(0.1);
+        <a href="https://github.com/sPuntinG/TidyTuesday" target="_blank" class="project-card">
+          <p class="project-num">001</p>
+          <div class="project-icon">📊</div>
+          <h3 class="project-name">Data Visualization Portfolio</h3>
+          <p class="project-desc">A growing collection of ggplot visualizations from #TidyTuesday, plus interactive R Shiny dashboards for data storytelling.</p>
+          <div class="project-tags">
+            <span class="tag green">R</span><span class="tag green">ggplot2</span><span class="tag green">R Shiny</span><span class="tag green">TidyTuesday</span>
+          </div>
+        </a>
 
-      const y = d3
-        .scaleLinear()
-        .domain([0, d3.max(data, (d) => d.value)])
-        .nice()
-        .range([height - margin.bottom, margin.top]);
+        <a href="https://github.com/sPuntinG/BiolPostgrad_Rworkshop2023" target="_blank" class="project-card">
+          <p class="project-num">002</p>
+          <div class="project-icon">🎓</div>
+          <h3 class="project-name">R Workshops & Teaching</h3>
+          <p class="project-desc">Materials from my workshops on data management, wrangling, and EDA using the Tidyverse. Run for postgrads and the international coral reef science community.</p>
+          <div class="project-tags">
+            <span class="tag green">R Tidyverse</span><span class="tag orange">Teaching</span><span class="tag orange">Reproducibility</span>
+          </div>
+        </a>
 
-      svg
-        .append("g")
-        .attr("fill", "steelblue")
-        .selectAll("rect")
-        .data(data)
-        .join("rect")
-        .attr("x", (d) => x(d.name))
-        .attr("y", (d) => y(d.value))
-        .attr("height", (d) => y(0) - y(d.value))
-        .attr("width", x.bandwidth());
+        <a href="https://github.com/sPuntinG/Galaxea_Microbiome_PCI" target="_blank" class="project-card type-bio">
+          <p class="project-num">003</p>
+          <div class="project-icon">🦠</div>
+          <h3 class="project-name">Coral Microbiome Analysis</h3>
+          <p class="project-desc">Full R pipeline for bacterial microbiome analysis of <em>Galaxea fascicularis</em> polyps. Published peer-reviewed research with fully reproducible code.</p>
+          <div class="project-tags">
+            <span class="tag">Microbiome</span><span class="tag">Bioinformatics</span><span class="tag green">R</span><span class="tag orange">Published</span>
+          </div>
+        </a>
 
-      svg
-        .append("g")
-        .attr("transform", `translate(0,${height - margin.bottom})`)
-        .call(d3.axisBottom(x));
+        <a href="https://github.com/sPuntinG/Galaxea_Coral_Model" target="_blank" class="project-card type-bio">
+          <p class="project-num">004</p>
+          <div class="project-icon">🪸</div>
+          <h3 class="project-name">Coral Physiology Analysis</h3>
+          <p class="project-desc">Statistical analysis establishing <em>G. fascicularis</em> as a new model system for coral symbiosis research.</p>
+          <div class="project-tags">
+            <span class="tag">Marine Biology</span><span class="tag green">R</span><span class="tag orange">Published</span>
+          </div>
+        </a>
 
-      svg
-        .append("g")
-        .attr("transform", `translate(${margin.left},0)`)
-        .call(d3.axisLeft(y));
-    </script>
+        <a href="https://github.com/sPuntinG/TA_Gran" target="_blank" class="project-card type-bio">
+          <p class="project-num">005</p>
+          <div class="project-icon">🌊</div>
+          <h3 class="project-name">Seawater Chemistry Pipeline</h3>
+          <p class="project-desc">Alkalinity calculation scripts for oceanographic data — a clean, reproducible R pipeline for seawater chemistry analysis.</p>
+          <div class="project-tags">
+            <span class="tag">Seawater Chemistry</span><span class="tag green">R</span><span class="tag green">Reproducibility</span>
+          </div>
+        </a>
 
-    <h2>Contact</h2>
-    <p>
-      You can reach me at
-      <a href="mailto:example@example.com">example@example.com</a>.
-    </p>
+      </div>
+    </section>
+
+    <section id="future">
+      <p class="section-label">04 &mdash; What's Next</p>
+      <h2 class="section-title">Future plans &<br><em style="font-style:italic;color:var(--accent)">collaborations</em></h2>
+      <p style="color:var(--muted);font-size:0.88rem;margin-bottom:2.5rem;max-width:560px;">I'm actively expanding my skill set. Reach out if you have an exciting project — I'd love to collaborate!</p>
+      <div class="plans-grid">
+        <div class="plan-card"><div class="plan-icon">📦</div><div class="plan-title">Contribute to an <code>R</code> package</div><div class="plan-desc">Give back to the community that shaped my skills.</div></div>
+        <div class="plan-card"><div class="plan-icon">🐬</div><div class="plan-title"><code>SQL</code> for data wrangling</div><div class="plan-desc">Scale up speed and capacity for large datasets.</div></div>
+        <div class="plan-card"><div class="plan-icon">📊</div><div class="plan-title">Data storytelling websites</div><div class="plan-desc">Engaging sites with <code>Hugo</code>, <code>D3</code>, and <code>CSS</code>.</div></div>
+        <div class="plan-card"><div class="plan-icon">🤖</div><div class="plan-title">Machine learning</div><div class="plan-desc">Predictive analytics for biological and environmental data.</div></div>
+        <div class="plan-card"><div class="plan-icon">🐍</div><div class="plan-title"><code>Python</code> for analysis</div><div class="plan-desc">Expand into Python for versatile, scalable workflows.</div></div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <p class="section-label">05 &mdash; Contact</p>
+      <div class="contact-box">
+        <h2 class="contact-heading">Let's collaborate 🤙</h2>
+        <p class="contact-sub">Have an exciting idea, a project that needs an R enthusiast, or just want to chat about data and biology? I'd love to hear from you!</p>
+        <div class="contact-links">
+          <a href="https://www.linkedin.com/in/giulia-puntin-spunting/" target="_blank" class="contact-link li">LinkedIn &rarr;</a>
+          <a href="https://scholar.google.co.nz/citations?user=827VF-YAAAAJ&hl=en" target="_blank" class="contact-link">Google Scholar 📚</a>
+        </div>
+        <div class="coffee-wrap">
+          <p class="coffee-label">Support my work</p>
+          <a href="https://www.buymeacoffee.com/spunting" target="_blank">
+            <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height:42px;width:152px;display:block;">
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <span>© 2026 Giulia Puntin. Built with HTML & CSS.</span>
+      <span>Hosted on GitHub Pages 🌍</span>
+    </footer>
+
   </body>
 </html>
